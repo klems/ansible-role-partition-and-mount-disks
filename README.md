@@ -11,7 +11,31 @@ Ansible == `2.4`
 
 Role Variables
 --------------
-See vars/main.yml for the list of required variables
+### {{ additional_disks }}
+
+A list of dictionnaries that must contains the following entries :
+
+```
+additional_disks:
+  - disk: /dev/sda
+    number: 1
+    state: present
+    part_start: "0%"
+    part_end: "100%"
+    fstype: ext4
+    mount_path: "/mnt/storagebox-01"
+    mount_state: mounted
+    mount_opts: noatime
+  - disk: /dev/sdb
+    number: 1
+    state: present
+    part_start: "0%"
+    part_end: "100%"
+    fstype: ext4
+    mount_path: "/mnt/storagebox-02"
+    mount_state: mounted
+    mount_opts: noatime
+```
 
 Dependencies
 ------------
