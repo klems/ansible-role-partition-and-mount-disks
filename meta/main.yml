@@ -1,0 +1,31 @@
+galaxy_info:
+
+  author: klems
+
+  description: A role to partition and mount a list of hard drives disks with automatic UUID detection.
+
+  company: Neonoïa
+
+  license: BSD
+
+  min_ansible_version: 2.4
+
+  platforms:
+  - name: Debian
+    versions:
+    - wheezy
+    - jessie
+    - stretch
+  - name: Ubuntu
+    versions:
+    - trusty
+    - xenial
+
+  galaxy_tags:
+    - linux
+    - system
+    - HDD
+    - mount
+    - UUID
+
+dependencies: []

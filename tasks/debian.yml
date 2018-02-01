@@ -1,0 +1,44 @@
+---
+
+- name: "[DEBIAN] installing parted ..."
+  apt:
+    name: parted
+    update_cache: yes
+    cache_valid_time: 3600
+  become: yes
+
+- name: "[DEBIAN] creating partitions on disks ..."
+  parted:
+    device: "{{ item.disk }}"
+    number: "{{ item.number }}"
+    state: "{{ item.state }}"
+    part_start: "{{ item.part_start }}"
+    part_end: "{{ item.part_end }}"
+  with_items: "{{ additional_disks }}"
+  become: yes
+
+- name: "[DEBIAN] creating filesystems on disks ..."
+  filesystem:
+    fstype: "{{ item.fstype }}"
+    dev: "{{ item.disk }}{{ item.number }}"
+  with_items: "{{ additional_disks }}"
+  become: yes
+
+- name: "[DEBIAN] getting partition UUID ..."
+  command: /sbin/blkid -s UUID -o value {{ item.disk }}{{ item.number }}
+  register: disk_blkid
+  with_items: "{{ additional_disks }}"
+  changed_when: False
+  become: yes
+
+- name: "[DEBIAN] mounting disks ..."
+  mount:
+    path: "{{ item.0.mount_path }}"
+    src: "UUID={{ item.1.stdout }}"
+    fstype: "{{ item.0.fstype }}"
+    opts: "{{ item.0.mount_opts }}"
+    state: "{{ item.0.mount_state }}"
+  with_together:
+    - "{{ additional_disks }}"
+    - "{{ disk_blkid.results }}"
+  become: yes
